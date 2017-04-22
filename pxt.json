@@ -1,0 +1,17 @@
+{
+    "name": "midi",
+    "version": "0.0.0",
+    "description": "A MIDI instrument package",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "midi.ts"
+    ],
+    "testFiles": [
+        "tests.ts"
+    ],
+    "public": true
+}
