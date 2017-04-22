@@ -377,6 +377,27 @@ namespace midi {
     }
 
     /**
+     * Sets the transport mechanism to send MIDI commands
+     * @param transport current transport
+     */
+    //% blockId=midi_set_input_transport block="set input transport %transport"
+    //% advanced=true
+    export function setInputTransport(transport: IMidiInputTransport) {
+        if (!transport) return;
+
+        inputTransport = transport;
+    }
+
+    /**
+     * Creates a serial transport
+     */
+    //% blockId=midi_serial_transport block="serial transport"
+    //% advanced=true
+    export function serialTransport(): IMidiInputTransport {
+        return new SerialTransport();
+    }
+
+    /**
      * A Input MIDI device
      */
     //%
@@ -472,6 +493,17 @@ namespace midi {
         return sound;
     }
 
+    let drumInput: MidiInput;
+    /**
+     * Plays a drum sound on channel 10
+     * @param key index of the sound
+     */
+    //% blockId=midi_drum block="drum %key=midi_drum_sound"
+    export function drum(key: number): void {
+        if (!drumInput) drumInput = input(10);
+        drumInput.noteOn(key);
+    }
+
     /**
      * Creates a MIDI input device. If not setup, uses serial transport.
      * @param channel the selected input channel, eg: 0
@@ -483,16 +515,5 @@ namespace midi {
 
         channel = Math.max(0, Math.min(15, channel));
         return new MidiInput(channel);
-    }
-
-    /**
-     * Sets the transport mechanism to send MIDI commands
-     * @param transport current transport
-     */
-    //% advanced=true
-    export function setInputTransport(transport: IMidiInputTransport) {
-        if (!transport) return;
-
-        inputTransport = transport;
     }
 }
