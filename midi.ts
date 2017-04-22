@@ -354,6 +354,23 @@ enum DrumSound {
     OpenTriangle = 81,
 }
 
+enum MidiCommand {
+    //% block="tune request"
+    TuneRequest = 0xf6,
+    //% block="timing clock"
+    TimingClock = 0xf8,
+    //% block="start"
+    Start = 0xfa,
+    //% block="continue"
+    Continue = 0xfb,
+    //% block="stop"
+    Stop = 0xfc,
+    //% block="active sensing"
+    ActiveSensing = 0xfe,
+    //% block="reset"
+    Reset = 0xff
+}
+
 namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
@@ -415,7 +432,8 @@ namespace midi {
          * @param instrument the instrument to select
          */
         //% blockId=midi_set_instrument block="%this|set instrument %instrument=midi_instrument"
-        setInstrument(instrument: number): void {
+        //% instrument.min=0 instrument.max=16
+        setInstrument(instrument: uint8): void {
             if (!inputTransport) return;
 
             instrument -= 1;
@@ -429,8 +447,9 @@ namespace midi {
          * @param velocity velocity of the instrument
          */
         //% blockId=midi_set_velocity block="%this|set velocity %velocity"
+        //% velocity.min=0 velocity.max=127
         setVelocity(velocity: uint8): void {
-            this.velocity = velocity & 127;
+            this.velocity = velocity & 0x7F;
         }
 
         /**
@@ -438,7 +457,8 @@ namespace midi {
          * @param note the note to play
          */
         //% blockId=midi_note_on block="%this|note on %note"
-        noteOn(note: number, velocity = 0): void {
+        //% velocity.min=0 velocity.max=127
+        noteOn(note: uint8, velocity = 0): void {
             if (!inputTransport) return;
             if (note < 0 || note > 0x7F) return;
 
@@ -450,7 +470,8 @@ namespace midi {
          * @param note the note to stop
          */
         //% blockId=midi_note_off block="%this|note off %note"
-        noteOff(note: number, velocity = 0): void {
+        //% velocity.min=0 velocity.max=127
+        noteOff(note: uint8, velocity = 0): void {
             if (!inputTransport) return;
             if (note < 0 || note > 0x7F) return;
 
@@ -463,13 +484,36 @@ namespace midi {
          * @param duration duration of play
          */
         //% blockId=midi_note block="%this|note %note|duration %duration=device_beat"
-        note(note: number, duration: number): void {
+        note(note: uint8, duration: number): void {
             if (duration > 0) {
                 this.noteOn(note);
                 basic.pause(duration);
             }
             this.noteOff(note);
             basic.pause(6);
+        }
+
+        /**
+         * Sets the pitch on the channel
+         * @param amount current bend, eg: 8192
+         */
+        //% amount.min=0 amount.max=16383
+        setPitchBend(amount: uint16) {
+            if (!inputTransport) return;
+
+            amount = amount & 0x3fff;
+            inputTransport.send([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
+        }
+
+        /**
+         * Sends a MIDI command
+         * @param cmd the command to send
+         */
+        //% blockId=midi_command block="command %cmd"
+        command(cmd: MidiCommand) {
+            if (!inputTransport) return;
+
+            inputTransport.send([cmd | this.channel]);
         }
     }
 
