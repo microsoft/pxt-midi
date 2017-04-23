@@ -396,10 +396,14 @@ namespace midi {
     //% advanced=true
     export function useSerial() {
         function send(data: number[]): void {
-            const buf = pins.createBuffer(data.length);
+            // waiting for beta
+            //const buf = pins.createBuffer(data.length);
+            //for (let i = 0; i < data.length; ++i)
+            //    buf[i] = data[i];
+            // serial.writeBuffer(buf);
             for (let i = 0; i < data.length; ++i)
-                buf[i] = data[i];
-            serial.writeBuffer(buf);
+                serial.writeNumber(data[i]);
+            serial.writeLine("");
         }
         setInputTransport(send)
     }
