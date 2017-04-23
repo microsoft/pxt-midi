@@ -8,6 +8,8 @@
     },
     "files": [
         "README.md",
+        "instruments.ts",
+        "drums.ts",
         "midi.ts"
     ],
     "testFiles": [
