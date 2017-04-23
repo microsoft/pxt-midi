@@ -374,7 +374,7 @@ enum MidiCommand {
 /**
  * Blocks to simulate MIDI instruments.
  */
-//% weight=80 icon="\uf001" color="#5ea9dd"
+//% weight=85 icon="\uf001" color="#5ea9dd"
 namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
@@ -404,6 +404,25 @@ namespace midi {
         setInputTransport(send)
     }
 
+    let inputs: MidiInput[];
+    /**
+     * Gets the MIDI input device for a given channel. If not transport is setup, uses serial transport.
+     * @param channel the selected input channel, eg: 0
+     */
+    //% blockId="midi_input" block="midi input channel %channel"
+    //% subcategory="Channels" weight=90
+    export function inputChannel(channel: number): MidiInput {
+        if (!inputTransport) useSerial();
+
+        channel = Math.max(0, Math.min(15, channel));
+
+        if (!inputs) inputs = [];
+        let i = inputs[channel];
+        if (!i) i = inputs[channel] = new MidiInput(channel);
+
+        return i;
+    }
+
     /**
      * A Input MIDI device
      */
@@ -418,11 +437,60 @@ namespace midi {
         }
 
         /**
+         * Plays a note for the given duration and adds a small pause
+         * @param key key to play between 0 and 127
+         * @param duration duration of play
+         */
+        //% blockId=midi_note block="%this|note %key|duration %duration=device_beat"
+        //% blockGap=8 weight=82
+        //% subcategory="Channels"
+        note(key: number, duration: number): void {
+            if (duration > 0) {
+                this.noteOn(key);
+                basic.pause(duration);
+            }
+            this.noteOff(key);
+            basic.pause(6);
+        }
+
+        /**
+         * Starts playing a note
+         * @param key the note to play
+         */
+        //% blockId=midi_note_on block="%this|note on %key"
+        //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
+        //% blockGap=8 weight=81
+        //% subcategory="Channels"
+        noteOn(key: number, velocity = 0): void {
+            if (!inputTransport) return;
+            if (key < 0 || key > 0x7F) return;
+
+            inputTransport([0x90 | this.channel, key, velocity || this.velocity]);
+        }
+
+        /**
+         * Stops playing a note
+         * @param note the note to stop
+         */
+        //% blockId=midi_note_off block="%this|note off %key"
+        //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
+        //% blockGap=8 weight=80
+        //% subcategory="Channels"
+        noteOff(key: number, velocity = 0): void {
+            if (!inputTransport) return;
+            if (key < 0 || key > 0x7F) return;
+
+            inputTransport([0x80 | this.channel, key, velocity || this.velocity]);
+        }
+
+        /**
          * Sets the instrument on this input channel
          * @param instrument the instrument to select
          */
         //% blockId=midi_set_instrument block="%this|set instrument %instrument=midi_instrument"
         //% instrument.min=0 instrument.max=16
+        //% blockGap=8
+        //% subcategory="Channels"
         setInstrument(instrument: MidiInstrument): void {
             if (!inputTransport) return;
 
@@ -438,49 +506,10 @@ namespace midi {
          */
         //% blockId=midi_set_velocity block="%this|set velocity %velocity"
         //% velocity.min=0 velocity.max=127
+        //% blockGap=8
+        //% subcategory="Channels"
         setVelocity(velocity: number): void {
             this.velocity = velocity & 0x7F;
-        }
-
-        /**
-         * Starts playing a note
-         * @param key the note to play
-         */
-        //% blockId=midi_note_on block="%this|note on %note"
-        //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
-        noteOn(key: number, velocity = 0): void {
-            if (!inputTransport) return;
-            if (key < 0 || key > 0x7F) return;
-
-            inputTransport([0x90 | this.channel, key, velocity || this.velocity]);
-        }
-
-        /**
-         * Stops playing a note
-         * @param note the note to stop
-         */
-        //% blockId=midi_note_off block="%this|note off %note"
-        //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
-        noteOff(key: number, velocity = 0): void {
-            if (!inputTransport) return;
-            if (key < 0 || key > 0x7F) return;
-
-            inputTransport([0x80 | this.channel, key, velocity || this.velocity]);
-        }
-
-        /**
-         * Plays a note for the given duration and adds a small pause
-         * @param key key to play between 0 and 127
-         * @param duration duration of play
-         */
-        //% blockId=midi_note block="%this|key %key|duration %duration=device_beat"
-        note(key: number, duration: number): void {
-            if (duration > 0) {
-                this.noteOn(key);
-                basic.pause(duration);
-            }
-            this.noteOff(key);
-            basic.pause(6);
         }
 
         /**
@@ -488,9 +517,13 @@ namespace midi {
          * @param amount current bend, eg: 8192
          */
         //% amount.min=0 amount.max=16383
+        //% blockGap=8 blockId=midi_set_pitch_bend block="%this|set pitch bend %amount"
+        //% amount.min=0 amount.max=1023
+        //% subcategory="Channels"
         setPitchBend(amount: uint16) {
             if (!inputTransport) return;
 
+            amount *= 16;
             amount = amount & 0x3fff;
             inputTransport([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
         }
@@ -499,7 +532,9 @@ namespace midi {
          * Sends a MIDI command
          * @param cmd the command to send
          */
-        //% blockId=midi_command block="midi command %cmd"
+        //% blockId=midi_command block="%this|command %cmd"
+        //% blockGap=8
+        //% subcategory="Channels"
         command(cmd: MidiCommand) {
             if (!inputTransport) return;
 
@@ -512,7 +547,7 @@ namespace midi {
      * @param frequency frequency of the note that will be mapped to a key
      * @param duration duration of the note
      */
-    //% block="midi play|note %frequency=device_note|for %duration=device_beat" blockGap=8
+    //% blockId=midi_play_note block="midi play|note %frequency=device_note|for %duration=device_beat" blockGap=8
     //% useEnumVal=1 weight=91
     export function playNote(frequency: number, duration: number): void {
         inputChannel(0).note(frequency, duration);
@@ -536,23 +571,5 @@ namespace midi {
     //% shim=TD_ID weight=5 advanced=true
     export function drumSound(sound: DrumSound): number {
         return sound;
-    }
-
-    let inputs: MidiInput[];
-    /**
-     * Gets the MIDI input device for a given channel. If not transport is setup, uses serial transport.
-     * @param channel the selected input channel, eg: 0
-     */
-    //% blockId="midi_input" block="midi input channel %channel"
-    export function inputChannel(channel: number): MidiInput {
-        if (!inputTransport) useSerial();
-
-        channel = Math.max(0, Math.min(15, channel));
-
-        if (!inputs) inputs = [];
-        let i = inputs[channel];
-        if (!i) i = inputs[channel] = new MidiInput(channel);
-
-        return i;
     }
 }
