@@ -27,6 +27,14 @@ Place a ``||midi play drum||`` block to play a drum sound. This blocks plays sou
 midi.playDrum(DrumSound.HandClap)
 ```
 
+### Pitch bending
+
+Place a ``||midi pitch bend||`` block to applying a sound bending effect to channel 0.
+
+```block
+midi.pitchBend(pins.analogInput(AnalogPin.P0))
+```
+
 ### Channels
 
 You can access and manipulate individual channels using the ``||midi input channel||`` block.
@@ -65,7 +73,7 @@ This is slightly different from MIDI standards but aligns better with sensor dat
 
 ```block
 let piano = midi.inputChannel(0);
-piano.setPitchBend(Math.abs(input.acceleration(Dimension.X)))
+piano.pitchBend(Math.abs(input.acceleration(Dimension.X)))
 ```
 ## License
 
