@@ -97,13 +97,14 @@ namespace midi {
     let inputs: MidiInput[];
     /**
      * Gets the MIDI input device for a given channel. If not transport is setup, uses serial transport.
-     * @param channel the selected input channel, eg: 0
+     * @param channel the selected input channel, eg: 1
      */
     //% blockId="midi_input" block="midi input channel %channel"
-    //% subcategory="Channels" weight=90 channel.min=0 channel.max=15
+    //% subcategory="Channels" weight=90 channel.min=1 channel.max=16
     export function inputChannel(channel: number): MidiInput {
         if (!inputTransport) useSerial();
 
+        channel -= 1;
         channel = Math.max(0, Math.min(15, channel));
 
         if (!inputs) inputs = [];
@@ -296,17 +297,17 @@ namespace midi {
     //% blockId=midi_play_tone block="midi play|tone %frequency=device_note|for %duration=device_beat" blockGap=8
     //% weight=91
     export function playTone(frequency: number, duration: number): void {
-        inputChannel(0).note(frequencyToKey(frequency), duration);
+        inputChannel(1).note(frequencyToKey(frequency), duration);
     }
 
     /**
-     * Applies a pitch bend effect to channel ``0``.
-     * @param bend the amount of bending to be applied on channel 0, eg: 512
+     * Applies a pitch bend effect to channel **1**.
+     * @param bend the amount of bending to be applied on channel **1**, eg: 512
      */
     //% blockId=midi_pitch_bend block="midi pitch bend %bend"
     //% bend.min=0 bend.max=1023
     export function pitchBend(bend: number): void {
-        inputChannel(0).pitchBend(bend);
+        inputChannel(1).pitchBend(bend);
     }
 
     const notes = [8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 15, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 28, 29, 31, 33, 35, 37, 39, 41, 44, 46, 49, 52, 55, 58, 62, 65, 69, 73, 78, 82, 87, 92, 98, 104, 110, 117, 123, 131, 139, 147, 156, 165, 175, 185, 196, 208, 220, 233, 247, 262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902, 8372, 8870, 9397, 9956, 10548, 11175, 11840, 12544];
@@ -336,13 +337,13 @@ namespace midi {
     }
 
     /**
-     * Plays a drum sound on channel 10
+     * Plays a drum sound on channel **10**
      * @param key index of the sound
      */
     //% blockId=midi_drum block="midi play drum %key=midi_drum_sound"
     //% weight=90
     export function playDrum(key: number): void {
-        inputChannel(10).noteOn(key);
+        inputChannel(9).noteOn(key);
     }
 
     /**
