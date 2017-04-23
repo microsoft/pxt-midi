@@ -38,22 +38,23 @@ midi.pitchBend(pins.analogInput(AnalogPin.P0))
 ### Channels
 
 You can access and manipulate individual channels using the ``||midi input channel||`` block.
+Channels are indexed from **1 to 16** and mapped internally to 0..15.
 
 ```block
-let piano = midi.inputChannel(0);
+let piano = midi.inputChannel(1);
 ```
 
 #### play a note
 
 ```block
-let piano = midi.inputChannel(0);
+let piano = midi.inputChannel(1);
 piano.note(30, music.beat(BeatFraction.Whole));
 ```
 
 #### play a note on / off
 
 ```block
-let piano = midi.inputChannel(0);
+let piano = midi.inputChannel(1);
 piano.noteOn(30);
 basic.pause(100)
 piano.noteOff(30)
@@ -62,7 +63,7 @@ piano.noteOff(30)
 ### change instrument
 
 ```block
-let trumpet = midi.inputChannel(1);
+let trumpet = midi.inputChannel(2);
 trumpet.setInstrument(MidiInstrument.Trumpet);
 ```
 
@@ -72,7 +73,7 @@ The pitch bend expects values between ``0..1023`` where ``512`` means no bend.
 This is slightly different from MIDI standards but aligns better with sensor data from the micro:bit.
 
 ```block
-let piano = midi.inputChannel(0);
+let piano = midi.inputChannel(1);
 piano.pitchBend(Math.abs(input.acceleration(Dimension.X)))
 ```
 ## License
