@@ -379,14 +379,29 @@ namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
      */
-    let inputTransport: (data: number[]) => void;
+    let inputTransport: (data: Buffer) => void;
 
     /**
      * Sets the transport mechanism to send MIDI commands
      * @param transport current transport
      */
     //% advanced=true
-    export function setInputTransport(transport: (data: number[]) => void) {
+    export function setInputTransport(transport: (data: Buffer) => void) {
+    }
+
+    /**
+     * Sends a MIDI message
+     * @param data 1,2 or 3 numbers
+     */
+    //% advanced=true
+    export function sendMessage(data: number[]) {
+        if (!inputTransport) return;
+
+        // TODO: create buffer from number[]
+        const buf = pins.createBuffer(data.length);
+        for (let i = 0; i < data.length; ++i)
+            buf.setNumber(NumberFormat.UInt8LE, i, data[i])
+        inputTransport(buf);
     }
 
     /**
@@ -395,7 +410,7 @@ namespace midi {
     //% blockId=midi_serial_transport block="midi use serial"
     //% advanced=true
     export function useSerial() {
-        function send(data: number[]): void {
+        function send(data: Buffer): void {
             // waiting for beta
             //const buf = pins.createBuffer(data.length);
             //for (let i = 0; i < data.length; ++i)
@@ -466,10 +481,9 @@ namespace midi {
         //% blockGap=8 weight=81
         //% subcategory="Channels"
         noteOn(key: number, velocity = 0): void {
-            if (!inputTransport) return;
             if (key < 0 || key > 0x7F) return;
 
-            inputTransport([0x90 | this.channel, key, velocity || this.velocity]);
+            sendMessage([0x90 | this.channel, key, velocity || this.velocity]);
         }
 
         /**
@@ -481,10 +495,9 @@ namespace midi {
         //% blockGap=8 weight=80
         //% subcategory="Channels"
         noteOff(key: number, velocity = 0): void {
-            if (!inputTransport) return;
             if (key < 0 || key > 0x7F) return;
 
-            inputTransport([0x80 | this.channel, key, velocity || this.velocity]);
+            sendMessage([0x80 | this.channel, key, velocity || this.velocity]);
         }
 
         /**
@@ -496,12 +509,10 @@ namespace midi {
         //% blockGap=8
         //% subcategory="Channels"
         setInstrument(instrument: MidiInstrument): void {
-            if (!inputTransport) return;
-
             instrument -= 1;
             if (instrument < 0 || instrument > 0x7f) return;
 
-            inputTransport([0xc0 | this.channel, instrument]);
+            sendMessage([0xc0 | this.channel, instrument]);
         }
 
         /**
@@ -525,11 +536,9 @@ namespace midi {
         //% amount.min=0 amount.max=1023
         //% subcategory="Channels"
         setPitchBend(amount: uint16) {
-            if (!inputTransport) return;
-
             amount *= 16;
             amount = amount & 0x3fff;
-            inputTransport([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
+            sendMessage([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
         }
 
         /**
@@ -540,9 +549,7 @@ namespace midi {
         //% blockGap=8
         //% subcategory="Channels"
         command(cmd: MidiCommand) {
-            if (!inputTransport) return;
-
-            inputTransport([cmd | this.channel]);
+            sendMessage([cmd | this.channel]);
         }
     }
 
