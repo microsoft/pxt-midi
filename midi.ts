@@ -433,7 +433,7 @@ namespace midi {
      * @param channel the selected input channel, eg: 0
      */
     //% blockId="midi_input" block="midi input channel %channel"
-    //% subcategory="Channels" weight=90
+    //% subcategory="Channels" weight=90 channel.min=0 channel.max=15
     export function inputChannel(channel: number): MidiInput {
         if (!inputTransport) useSerial();
 
@@ -533,9 +533,8 @@ namespace midi {
 
         /**
          * Sets the pitch on the channel
-         * @param amount current bend, eg: 8192
+         * @param amount current bend, eg: 512
          */
-        //% amount.min=0 amount.max=16383
         //% blockGap=8 blockId=midi_set_pitch_bend block="%this|set pitch bend %amount"
         //% amount.min=0 amount.max=1023
         //% subcategory="Channels"
@@ -558,13 +557,13 @@ namespace midi {
     }
 
     /**
-     * Plays a note on channel 0
+     * Plays a tone on channel 0
      * @param frequency frequency of the note that will be mapped to a key
      * @param duration duration of the note
      */
-    //% blockId=midi_play_note block="midi play|note %frequency=device_note|for %duration=device_beat" blockGap=8
+    //% blockId=midi_play_tone block="midi play|tone %frequency=device_note|for %duration=device_beat" blockGap=8
     //% weight=91
-    export function playNote(frequency: number, duration: number): void {
+    export function playTone(frequency: number, duration: number): void {
         inputChannel(0).note(frequencyToKey(frequency), duration);
     }
 
@@ -599,7 +598,7 @@ namespace midi {
      */
     //% blockId=midi_drum block="midi play drum %key=midi_drum_sound"
     //% weight=90
-    export function drum(key: number): void {
+    export function playDrum(key: number): void {
         inputChannel(10).noteOn(key);
     }
 
