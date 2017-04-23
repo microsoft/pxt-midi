@@ -538,7 +538,7 @@ namespace midi {
         //% blockGap=8 blockId=midi_set_pitch_bend block="%this|set pitch bend %amount"
         //% amount.min=0 amount.max=1023
         //% subcategory="Channels"
-        setPitchBend(amount: uint16) {
+        setPitchBend(amount: number) {
             amount *= 16;
             amount = amount & 0x3fff;
             sendMessage([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
