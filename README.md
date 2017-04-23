@@ -12,7 +12,7 @@ You will need to connect a MIDI via serial, radio or bluetooth get it to "talk" 
 
 ### Playing notes
 
-Place a ``||midi play tone||`` block to play a single note on channel **1**. 
+Place a ``||midi play tone||`` block to play a single note on channel **0**. 
 The frequency is mapped to the nearest note.
 
 ```block
