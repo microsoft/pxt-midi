@@ -387,6 +387,7 @@ namespace midi {
      */
     //% advanced=true
     export function setInputTransport(transport: (data: Buffer) => void) {
+        inputTransport = transport;
     }
 
     /**

@@ -2,5 +2,5 @@
 midi.playNote(400, 500);
 for (let i = 0; i < 127; ++i)
     midi.drum(i)
-let i = midi.inputChannel(0);
+let i = midi.inputChannel(1);
 i.setInstrument(MidiInstrument.Banjo);
