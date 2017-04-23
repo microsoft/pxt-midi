@@ -10,7 +10,10 @@
         "README.md",
         "midi.ts",
         "instruments.ts",
-        "drums.ts"
+        "drums.ts",
+        "extension.cpp",
+        "shims.d.ts",
+        "enums.d.ts"
     ],
     "testFiles": [
         "tests.ts"
