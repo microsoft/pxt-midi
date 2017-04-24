@@ -280,7 +280,7 @@ namespace midi {
          * Channel mode control Change.
          * @param mode the channel mode change
          */
-        //% blockId=midi_polyphonic_after_touch block="%this|mode %mode"
+        //% blockId=midi_channel_mode block="%this|mode %mode"
         //% blockGap=8
         //% subcategory="Channels"
         channelMode(mode: MidiChannelMode) {
