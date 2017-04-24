@@ -29,16 +29,16 @@ midi.playDrum(DrumSound.HandClap)
 
 ### Pitch bending
 
-Place a ``||midi pitch bend||`` block to applying a sound bending effect to channel 0.
+Place a ``||midi pitch bend||`` block to applying a sound bending effect to channel **1**.
 
 ```block
-midi.pitchBend(pins.analogInput(AnalogPin.P0))
+midi.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 ```
 
 ### Channels
 
 You can access and manipulate individual channels using the ``||midi input channel||`` block.
-Channels are indexed from **1 to 16** and mapped internally to 0..15.
+Channels are indexed from **1 to 16** and mapped internally to **0..15**.
 
 ```block
 let piano = midi.inputChannel(1);
@@ -69,12 +69,11 @@ trumpet.setInstrument(MidiInstrument.Trumpet);
 
 #### change pitch bend
 
-The pitch bend expects values between ``0..1023`` where ``512`` means no bend.
-This is slightly different from MIDI standards but aligns better with sensor data from the micro:bit.
+The pitch bend expects values between ``0..16383`` where ``8192`` means no bend.
 
 ```block
 let piano = midi.inputChannel(1);
-piano.pitchBend(Math.abs(input.acceleration(Dimension.X)))
+piano.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 ```
 ## License
 

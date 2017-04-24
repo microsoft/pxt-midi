@@ -201,14 +201,13 @@ namespace midi {
 
         /**
          * Sets the pitch on the channel
-         * @param amount current bend, eg: 512
+         * @param amount current bend, eg: 8192
          */
         //% blockGap=8 blockId=midi_set_pitch_bend block="%this|set pitch bend %amount"
-        //% amount.min=0 amount.max=1023 weight=78
+        //% amount.min=0 amount.max=16383  weight=78
         //% subcategory="Channels"
         pitchBend(amount: number) {
-            amount *= 16;
-            amount = amount & 0x3fff;
+            amount = Math.max(0, amount & 0x3fff);
             sendMessage([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
         }
 
@@ -302,10 +301,10 @@ namespace midi {
 
     /**
      * Applies a pitch bend effect to channel **1**.
-     * @param bend the amount of bending to be applied on channel **1**, eg: 512
+     * @param bend the amount of bending to be applied on channel **1**, eg: 8192
      */
     //% blockId=midi_pitch_bend block="midi pitch bend %bend"
-    //% bend.min=0 bend.max=1023
+    //% bend.min=0 bend.max=16383
     export function pitchBend(bend: number): void {
         inputChannel(1).pitchBend(bend);
     }
