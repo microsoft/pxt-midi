@@ -46,15 +46,15 @@ namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
      */
-    let inputTransport: (data: Buffer) => void;
+    let transport: (data: Buffer) => void;
 
     /**
      * Sets the transport mechanism to send MIDI commands
-     * @param transport current transport
+     * @param newTransport current transport
      */
     //% advanced=true
-    export function setInputTransport(transport: (data: Buffer) => void) {
-        inputTransport = transport;
+    export function setTransport(newTransport: (data: Buffer) => void) {
+        transport = newTransport;
     }
 
     /**
@@ -63,13 +63,13 @@ namespace midi {
      */
     //% advanced=true
     export function sendMessage(data: number[]) {
-        if (!inputTransport) return;
+        if (!transport) return;
 
         // TODO: create buffer from number[]
         const buf = pins.createBuffer(data.length);
         for (let i = 0; i < data.length; ++i)
             buf.setNumber(NumberFormat.UInt8LE, i, data[i])
-        inputTransport(buf);
+        transport(buf);
     }
 
     /**
@@ -91,34 +91,34 @@ namespace midi {
             }
             serial.writeLine("");
         }
-        setInputTransport(send)
+        setTransport(send)
     }
 
-    let inputs: MidiInput[];
+    let channels: MidiController[];
     /**
-     * Gets the MIDI input device for a given channel. If not transport is setup, uses serial transport.
-     * @param channel the selected input channel, eg: 1
+     * Gets the MIDI controller for a given channel. If not transport is setup, uses serial transport.
+     * @param channel the selected channel, eg: 1
      */
-    //% blockId="midi_input" block="midi input channel %channel"
+    //% blockId="midi_channel" block="midi channel %channel"
     //% subcategory="Channels" weight=90 channel.min=1 channel.max=16
-    export function inputChannel(channel: number): MidiInput {
-        if (!inputTransport) useSerial();
+    export function channel(channel: number): MidiController {
+        if (!transport) useSerial();
 
         channel -= 1;
         channel = Math.max(0, Math.min(15, channel));
 
-        if (!inputs) inputs = [];
-        let i = inputs[channel];
-        if (!i) i = inputs[channel] = new MidiInput(channel);
+        if (!channels) channels = [];
+        let i = channels[channel];
+        if (!i) i = channels[channel] = new MidiController(channel);
 
         return i;
     }
 
     /**
-     * A Input MIDI device
+     * A Output MIDI controller, typically a keyboard.
      */
     //%
-    export class MidiInput {
+    export class MidiController {
         channel: number;
         velocity: number;
 
@@ -173,7 +173,7 @@ namespace midi {
         }
 
         /**
-         * Sets the instrument on this input channel
+         * Sets the instrument on this channel
          * @param instrument the instrument to select
          */
         //% blockId=midi_set_instrument block="%this|set instrument %instrument=midi_instrument"
@@ -296,7 +296,7 @@ namespace midi {
     //% blockId=midi_play_tone block="midi play|tone %frequency=device_note|for %duration=device_beat" blockGap=8
     //% weight=91
     export function playTone(frequency: number, duration: number): void {
-        inputChannel(1).note(frequencyToKey(frequency), duration);
+        channel(1).note(frequencyToKey(frequency), duration);
     }
 
     /**
@@ -306,7 +306,7 @@ namespace midi {
     //% blockId=midi_pitch_bend block="midi pitch bend %bend"
     //% bend.min=0 bend.max=16383
     export function pitchBend(bend: number): void {
-        inputChannel(1).pitchBend(bend);
+        channel(1).pitchBend(bend);
     }
 
     /**
@@ -342,7 +342,7 @@ namespace midi {
     //% blockId=midi_drum block="midi play drum %key=midi_drum_sound"
     //% weight=90
     export function playDrum(key: number): void {
-        inputChannel(10).noteOn(key);
+        channel(10).noteOn(key);
     }
 
     /**

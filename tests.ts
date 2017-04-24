@@ -2,9 +2,9 @@
 midi.playTone(400, 500);
 for (let i = 0; i < 127; ++i)
     midi.playDrum(i)
-let i = midi.inputChannel(1);
+let i = midi.channel(1);
 i.setInstrument(MidiInstrument.Banjo);
 
-let piano = midi.inputChannel(0);
-let trumpet = midi.inputChannel(1);
+let piano = midi.channel(0);
+let trumpet = midi.channel(1);
 piano.setInstrument(MidiInstrument.Trumpet);

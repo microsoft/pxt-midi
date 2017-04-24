@@ -1,6 +1,6 @@
 # MIDI
 
-A MIDI interface for @boardname@
+Emulates a MIDI output controller.
 
 ## Usage
 
@@ -37,24 +37,24 @@ midi.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 
 ### Channels
 
-You can access and manipulate individual channels using the ``||midi input channel||`` block.
+You can access and manipulate individual channels using the ``||midi channel||`` block.
 Channels are indexed from **1 to 16** and mapped internally to **0..15**.
 
 ```block
-let piano = midi.inputChannel(1);
+let piano = midi.channel(1);
 ```
 
 #### play a note
 
 ```block
-let piano = midi.inputChannel(1);
+let piano = midi.channel(1);
 piano.note(30, music.beat(BeatFraction.Whole));
 ```
 
 #### play a note on / off
 
 ```block
-let piano = midi.inputChannel(1);
+let piano = midi.channel(1);
 piano.noteOn(30);
 basic.pause(100)
 piano.noteOff(30)
@@ -63,7 +63,7 @@ piano.noteOff(30)
 ### change instrument
 
 ```block
-let trumpet = midi.inputChannel(2);
+let trumpet = midi.channel(2);
 trumpet.setInstrument(MidiInstrument.Trumpet);
 ```
 
@@ -72,7 +72,7 @@ trumpet.setInstrument(MidiInstrument.Trumpet);
 The pitch bend expects values between ``0..16383`` where ``8192`` means no bend.
 
 ```block
-let piano = midi.inputChannel(1);
+let piano = midi.channel(1);
 piano.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 ```
 ## License

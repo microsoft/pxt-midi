@@ -1,7 +1,7 @@
 {
     "name": "midi",
-    "version": "1.1.6",
-    "description": "A MIDI instrument package",
+    "version": "2.0.0",
+    "description": "A MIDI output controller package",
     "license": "MIT",
     "dependencies": {
         "core": "*"
