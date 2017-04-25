@@ -10,13 +10,26 @@ You will need to connect a MIDI via serial, radio or bluetooth get it to "talk" 
 
 * for Bluetooth, use the [bluetooth midi package](https://pxt.microbit.org/pkg/microsoft/pxt-bluetooth-midi).
 
-### Playing notes
+### Playing tones
 
 Place a ``||midi play tone||`` block to play a single note (on channel **1**). 
 The frequency is mapped to the nearest note.
 
 ```block
 midi.playTone(Note.A, music.beat(BeatFraction.Whole))
+```
+
+### Tone on / off
+
+Place a ``||midi tone on||`` block to start a tone (on channel **1**).
+Place a ``||midi tone off||`` to turn it off.
+
+```block
+midi.toneOn(Note.A)
+midi.toneOn(Note.B)
+basic.pause(music.beat())
+midi.toneOff(Note.A)
+midi.toneOff(Note.B)
 ```
 
 ### Drums

@@ -96,14 +96,12 @@ namespace midi {
 
     let channels: MidiController[];
     /**
-     * Gets the MIDI controller for a given channel. If not transport is setup, uses serial transport.
+     * Gets the MIDI controller for a given channel.
      * @param channel the selected channel, eg: 1
      */
     //% blockId="midi_channel" block="midi channel %channel"
     //% subcategory="Channels" weight=90 channel.min=1 channel.max=16
     export function channel(channel: number): MidiController {
-        if (!transport) useSerial();
-
         channel -= 1;
         channel = Math.max(0, Math.min(15, channel));
 
@@ -297,6 +295,26 @@ namespace midi {
     //% weight=91
     export function playTone(frequency: number, duration: number): void {
         channel(1).note(frequencyToKey(frequency), duration);
+    }
+
+    /**
+     * Turns on a note on channel 1
+     * @param frequency frequency of the note that will be mapped to a key
+     */
+    //% blockId=midi_tone_on block="midi tone on %frequency=device_note" blockGap=8
+    //% weight=70
+    export function toneOn(frequency: number): void {
+        channel(1).noteOn(frequencyToKey(frequency));
+    }
+
+    /**
+     * Turns off a note on channel 1
+     * @param frequency frequency of the note that will be mapped to a key
+     */
+    //% blockId=midi_tone_off block="midi tone off %frequency=device_note"
+    //% weight=70
+    export function toneOff(frequency: number): void {
+        channel(1).noteOff(frequencyToKey(frequency));
     }
 
     /**
