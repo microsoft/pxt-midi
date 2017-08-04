@@ -229,7 +229,7 @@ namespace midi {
         //% subcategory="Channels"
         //% program.min=0 program.max=127
         programChange(program: number) {
-            sendMessage([0xc0 | this.channel, program & 0xf]);
+            sendMessage([0xc0 | this.channel, program & 0x7f]);
         }
 
         /**
@@ -242,7 +242,7 @@ namespace midi {
         //% subcategory="Channels"
         //% pressure.min=0 pressure.max=127
         aftertouch(pressure: number) {
-            sendMessage([0xd0 | this.channel, pressure & 0xf]);
+            sendMessage([0xd0 | this.channel, pressure & 0x7f]);
         }
 
         /**
@@ -250,13 +250,13 @@ namespace midi {
          * @param key the note to play
          * @param pressure the pressure
          */
-        //% blockId=midi_polyphonic_after_touch block="%this|polyphonic after touch %key %pressure"
+        //% blockId=midi_polyphonic_after_touch block="%this|polyphonic after touch %key| %pressure"
         //% blockGap=8
         //% subcategory="Channels"
         //% key.min=0 key.max=127
         //% pressure.min=0 pressure.max=127
         polyphonicAftertouch(key: number, pressure: number) {
-            sendMessage([0xa0 | this.channel, key & 0xf, pressure & 0xf]);
+            sendMessage([0xa0 | this.channel, key & 0x7f, pressure & 0x7f]);
         }
 
         /**
@@ -265,13 +265,13 @@ namespace midi {
          * @param controller the controller number
          * @param value the value
          */
-        //% blockId=midi_control_change block="%this|control change %key to %pressure"
+        //% blockId=midi_control_change block="%this|control change %fn| to %value"
         //% blockGap=8
         //% subcategory="Channels"
         //% fn.min=0 fn.max=119
         //% value.min=0 value.max=127
         controlChange(fn: number, value: number) {
-            sendMessage([0xb0 | this.channel, fn & 0xf, value & 0xf]);
+            sendMessage([0xb0 | this.channel, fn & 0x7f, value & 0x7f]);
         }
 
         /**
@@ -282,7 +282,7 @@ namespace midi {
         //% blockGap=8
         //% subcategory="Channels"
         channelMode(mode: MidiChannelMode) {
-            sendMessage([0xb0 | this.channel, (mode >> 8) & 0xf, mode & 0xf]);
+            sendMessage([0xb0 | this.channel, (mode >> 8) & 0x7f, mode & 0x7f]);
         }
     }
 
