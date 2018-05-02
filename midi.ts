@@ -72,8 +72,20 @@ namespace midi {
         transport(buf);
     }
 
+     /**
+     * Send raw MIDI messages via serial
+     */
+    //% blockId=midi_raw_serial_transport block="midi use raw serial"
+    //% advanced=true
+    export function useRawSerial() {
+        function send(data: Buffer): void {
+            serial.writeBuffer(data)
+        }
+        setTransport(send)
+    }
+    
     /**
-     * Send MIDI messages via serial
+     * Send human readable MIDI messages via serial
      */
     //% blockId=midi_serial_transport block="midi use serial"
     //% advanced=true
