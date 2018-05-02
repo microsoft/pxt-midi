@@ -10,6 +10,12 @@ You will need to connect a MIDI via serial, radio or bluetooth get it to "talk" 
 
 * for Bluetooth, use the [bluetooth midi package](https://pxt.microbit.org/pkg/microsoft/pxt-bluetooth-midi).
 
+* for bridge applications like Hairless MIDI, call ``useRawSerial``
+
+```block
+midi.useRawSerial()
+```
+
 ### Playing tones
 
 Place a ``||midi play tone||`` block to play a single note (on channel **1**). 
