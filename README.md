@@ -1,4 +1,4 @@
-# MIDI
+# MIDI [![Build Status](https://travis-ci.org/Microsoft/pxt-midi.svg?branch=master)](https://travis-ci.org/Microsoft/pxt-midi)
 
 Emulates a MIDI output controller.
 
