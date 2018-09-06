@@ -72,9 +72,9 @@ namespace midi {
         transport(buf);
     }
 
-     /**
-     * Send raw MIDI messages via serial
-     */
+    /**
+    * Send raw MIDI messages via serial
+    */
     //% blockId=midi_raw_serial_transport block="midi use raw serial"
     //% advanced=true
     export function useRawSerial() {
@@ -83,7 +83,7 @@ namespace midi {
         }
         setTransport(send)
     }
-    
+
     /**
      * Send human readable MIDI messages via serial
      */
@@ -358,7 +358,7 @@ namespace midi {
             } else {
                 left = mid;
             }
-            mid = (left + right) / 2;
+            mid = (left + right) >> 1;
         }
         // imprecise match
         return frequency - notes[left] < notes[right] - frequency
