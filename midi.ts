@@ -358,7 +358,7 @@ namespace midi {
             } else {
                 left = mid;
             }
-            mid = (left + right) >> 1;
+            mid = ((left + right) >> 1) >> 0;
         }
         // imprecise match
         return frequency - notes[left] < notes[right] - frequency

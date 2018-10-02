@@ -8,3 +8,5 @@ i.setInstrument(MidiInstrument.Banjo);
 let piano = midi.channel(0);
 let trumpet = midi.channel(1);
 piano.setInstrument(MidiInstrument.Trumpet);
+
+serial.writeLine('B ' + Note.B + ' -> ' + midi.frequencyToKey(Note.B))
