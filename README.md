@@ -10,7 +10,7 @@ You will need to connect a MIDI via serial, radio or bluetooth get it to "talk" 
 
 * for Bluetooth, use the [bluetooth midi package](https://pxt.microbit.org/pkg/microsoft/pxt-bluetooth-midi).
 
-* for bridge applications like Hairless MIDI, call ``useRawSerial``
+* for bridge applications like [Hairless MIDI](http://projectgus.github.io/hairless-midiserial/), call ``useRawSerial``
 
 ```block
 midi.useRawSerial()
@@ -94,6 +94,32 @@ The pitch bend expects values between ``0..16383`` where ``8192`` means no bend.
 let piano = midi.channel(1);
 piano.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 ```
+
+## Radio serial
+
+You can use radio to send MIDI messages from various @boardname@ and play them via  [Hairless MIDI](http://projectgus.github.io/hairless-midiserial/).
+
+```typescript
+radio.setGroup(10)
+// routes all radio messages via radio
+midi.setTransport(function (data: Buffer) {
+    led.toggle(3, 4)
+    radio.sendBuffer(data);
+})
+
+// proxies all radio buffers to serial
+radio.onReceivedBuffer(function (buffer: Buffer) {
+    serial.writeBuffer(buffer);
+    led.toggle(4, 4);
+})
+
+// test send message
+input.onButtonPressed(Button.A, function () {
+    led.toggle(0, 0)
+    midi.playTone(Note.C, 500)
+})
+```
+
 ## License
 
 MIT
