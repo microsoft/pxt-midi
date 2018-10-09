@@ -42,6 +42,7 @@ enum MidiChannelMode {
  * Blocks to simulate MIDI instruments.
  */
 //% weight=85 icon="\uf001" color="#5ea9dd"
+//% groups="['Play', 'Constants', 'Channels', 'Transports']"
 namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
@@ -77,6 +78,7 @@ namespace midi {
     */
     //% blockId=midi_raw_serial_transport block="midi use raw serial"
     //% weight=2
+    //% group=Transports
     export function useRawSerial() {
         function send(data: Buffer): void {
             serial.writeBuffer(data)
@@ -89,6 +91,7 @@ namespace midi {
      */
     //% blockId=midi_serial_transport block="midi use serial"
     //% weight=1
+    //% group=Transports
     export function useSerial() {
         function send(data: Buffer): void {
             // waiting for beta
@@ -112,7 +115,7 @@ namespace midi {
      * @param channel the selected channel, eg: 1
      */
     //% blockId="midi_channel" block="midi channel %channel"
-    //% subcategory="Channels" weight=90 channel.min=1 channel.max=16
+    //% group="Channels" weight=90 channel.min=1 channel.max=16
     export function channel(channel: number): MidiController {
         channel -= 1;
         channel = Math.max(0, Math.min(15, channel));
@@ -144,7 +147,7 @@ namespace midi {
          */
         //% blockId=midi_note block="%this|note %key|duration %duration=device_beat"
         //% blockGap=8 weight=82
-        //% subcategory="Channels"
+        //% group="Channels"
         note(key: number, duration: number): void {
             key = key >> 0;
             if (duration > 0) {
@@ -162,7 +165,7 @@ namespace midi {
         //% blockId=midi_note_on block="%this|note on %key"
         //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
         //% blockGap=8 weight=81
-        //% subcategory="Channels"
+        //% group="Channels"
         noteOn(key: number, velocity = 0): void {
             key = key >> 0;
             if (key < 0 || key > 0x7f) return;
@@ -177,7 +180,7 @@ namespace midi {
         //% blockId=midi_note_off block="%this|note off %key"
         //% key.min=0 key.max=127 velocity.min=0 velocity.max=127
         //% blockGap=8 weight=80
-        //% subcategory="Channels"
+        //% group="Channels"
         noteOff(key: number, velocity = 0): void {
             key = key >> 0;
             if (key < 0 || key > 0x7f) return;
@@ -192,7 +195,7 @@ namespace midi {
         //% blockId=midi_set_instrument block="%this|set instrument %instrument=midi_instrument"
         //% instrument.min=0 instrument.max=16
         //% weight=70
-        //% subcategory="Channels"
+        //% group="Channels"
         setInstrument(instrument: number): void {
             instrument = instrument >> 0;
             instrument -= 1;
@@ -208,7 +211,7 @@ namespace midi {
         //% blockId=midi_set_velocity block="%this|set velocity %velocity"
         //% velocity.min=0 velocity.max=127
         //% blockGap=8 weight=79
-        //% subcategory="Channels"
+        //% group="Channels"
         setVelocity(velocity: number): void {
             velocity = velocity >> 0;
             this.velocity = velocity & 0x7f;
@@ -220,7 +223,7 @@ namespace midi {
          */
         //% blockGap=8 blockId=midi_set_pitch_bend block="%this|set pitch bend %amount"
         //% amount.min=0 amount.max=16383  weight=78
-        //% subcategory="Channels"
+        //% group="Channels"
         pitchBend(amount: number) {
             amount = amount >> 0;
             amount = Math.max(0, amount & 0x3fff);
@@ -233,7 +236,7 @@ namespace midi {
          */
         //% blockId=midi_command block="%this|command $cmd=midi_command_id"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         command(cmd: number) {
             cmd = cmd >> 0;
             sendMessage([cmd | this.channel]);
@@ -245,7 +248,7 @@ namespace midi {
          */
         //% blockId=midi_program_change block="%this|program change to %program"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         //% program.min=0 program.max=127
         programChange(program: number) {
             program = program >> 0;
@@ -259,7 +262,7 @@ namespace midi {
          */
         //% blockId=midi_after_touch block="%this|after touch %pressure"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         //% pressure.min=0 pressure.max=127
         aftertouch(pressure: number) {
             pressure = pressure >> 0;
@@ -273,7 +276,7 @@ namespace midi {
          */
         //% blockId=midi_polyphonic_after_touch block="%this|polyphonic after touch %key %pressure"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         //% key.min=0 key.max=127
         //% pressure.min=0 pressure.max=127
         polyphonicAftertouch(key: number, pressure: number) {
@@ -290,7 +293,7 @@ namespace midi {
          */
         //% blockId=midi_control_change block="%this|control change %key to %pressure"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         //% fn.min=0 fn.max=119
         //% value.min=0 value.max=127
         controlChange(fn: number, value: number) {
@@ -305,7 +308,7 @@ namespace midi {
          */
         //% blockId=midi_channel_mode block="%this|mode %mode"
         //% blockGap=8
-        //% subcategory="Channels"
+        //% group="Channels"
         channelMode(mode: MidiChannelMode) {
             sendMessage([0xb0 | this.channel, (mode >> 8) & 0x7f, mode & 0x7f]);
         }
@@ -318,6 +321,7 @@ namespace midi {
      */
     //% blockId=midi_play_tone block="midi play|tone %frequency=device_note|for %duration=device_beat" blockGap=8
     //% weight=91
+    //% group="Play"
     export function playTone(frequency: number, duration: number): void {
         channel(1).note(frequencyToKey(frequency), duration);
     }
@@ -328,6 +332,7 @@ namespace midi {
      */
     //% blockId=midi_tone_on block="midi tone on %frequency=device_note" blockGap=8
     //% weight=70
+    //% group="Play"
     export function toneOn(frequency: number): void {
         channel(1).noteOn(frequencyToKey(frequency));
     }
@@ -338,6 +343,7 @@ namespace midi {
      */
     //% blockId=midi_tone_off block="midi tone off %frequency=device_note"
     //% weight=70
+    //% group="Play"
     export function toneOff(frequency: number): void {
         channel(1).noteOff(frequencyToKey(frequency));
     }
@@ -348,6 +354,7 @@ namespace midi {
      */
     //% blockId=midi_pitch_bend block="midi pitch bend %bend"
     //% bend.min=0 bend.max=16383
+    //% group="Play"
     export function pitchBend(bend: number): void {
         channel(1).pitchBend(bend);
     }
@@ -358,6 +365,7 @@ namespace midi {
      */
     //% blockId=midi_frequency_to_key block="key at %frequency=device_note" useEnumVal=1
     //% shim=midi::frequencyToKey weight=4 blockGap=8
+    //% group="Constants"
     export function frequencyToKey(frequency: number): number {
         const notes = [8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 15, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 28, 29, 31, 33, 35, 37, 39, 41, 44, 46, 49, 52, 55, 58, 62, 65, 69, 73, 78, 82, 87, 92, 98, 104, 110, 117, 123, 131, 139, 147, 156, 165, 175, 185, 196, 208, 220, 233, 247, 262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902, 8372, 8870, 9397, 9956, 10548, 11175, 11840, 12544];
         let left = 0, right = 0x7f, mid = 69;
@@ -384,6 +392,7 @@ namespace midi {
      */
     //% blockId=midi_drum block="midi play drum %key=midi_drum_sound"
     //% weight=90
+    //% group="Play"
     export function playDrum(key: number): void {
         channel(10).noteOn(key);
     }
@@ -394,6 +403,7 @@ namespace midi {
      */
     //% blockId=midi_drum_sound block="%sound"
     //% shim=TD_ID weight=5 blockGap=8
+    //% group="Constants"
     export function drumSound(sound: DrumSound): number {
         return sound;
     }
@@ -403,6 +413,7 @@ namespace midi {
      */
     //% blockId=midi_instrument block="$i"
     //% shim=TD_ID weight=4 blockGap=8
+    //% group="Constants"
     export function instrument(i: MidiInstrument): number {
         return i;
     }
@@ -412,6 +423,7 @@ namespace midi {
      */
     //% blockId=midi_command_id block="$c"
     //% shim=TD_ID weight=3 blockGap=8
+    //% group="Constants"
     export function command(c: MidiCommand): number {
         return c;
     }
