@@ -401,7 +401,7 @@ namespace midi {
     /**
      * Selects an instrument
      */
-    //% blockId=midi_instrument block="$instrument"
+    //% blockId=midi_instrument block="$i"
     //% shim=TD_ID weight=4 advanced=true
     export function instrument(i: MidiInstrument): number {
         return i;
@@ -410,7 +410,7 @@ namespace midi {
     /**
      * Selects a command
      */
-    //% blockId=midi_command_id block="$command"
+    //% blockId=midi_command_id block="$c"
     //% shim=TD_ID weight=4 advanced=true
     export function command(c: MidiCommand): number {
         return c;
