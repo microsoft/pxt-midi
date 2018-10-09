@@ -231,7 +231,7 @@ namespace midi {
          * Sends a MIDI command
          * @param cmd the command to send
          */
-        //% blockId=midi_command block="%this|command $cmd=midi_command"
+        //% blockId=midi_command block="%this|command $cmd=midi_command_id"
         //% blockGap=8
         //% subcategory="Channels"
         command(cmd: number) {
@@ -410,7 +410,7 @@ namespace midi {
     /**
      * Selects a command
      */
-    //% blockId=midi_command block="$command"
+    //% blockId=midi_command_id block="$command"
     //% shim=TD_ID weight=4 advanced=true
     export function command(c: MidiCommand): number {
         return c;
