@@ -146,6 +146,7 @@ namespace midi {
         //% blockGap=8 weight=82
         //% subcategory="Channels"
         note(key: number, duration: number): void {
+            key = key >> 0;
             if (duration > 0) {
                 this.noteOn(key);
                 basic.pause(duration);
@@ -163,6 +164,7 @@ namespace midi {
         //% blockGap=8 weight=81
         //% subcategory="Channels"
         noteOn(key: number, velocity = 0): void {
+            key = key >> 0;
             if (key < 0 || key > 0x7f) return;
 
             sendMessage([0x90 | this.channel, key, velocity || this.velocity]);
@@ -177,6 +179,7 @@ namespace midi {
         //% blockGap=8 weight=80
         //% subcategory="Channels"
         noteOff(key: number, velocity = 0): void {
+            key = key >> 0;
             if (key < 0 || key > 0x7f) return;
 
             sendMessage([0x80 | this.channel, key, velocity || this.velocity]);
@@ -190,7 +193,8 @@ namespace midi {
         //% instrument.min=0 instrument.max=16
         //% weight=70
         //% subcategory="Channels"
-        setInstrument(instrument: MidiInstrument): void {
+        setInstrument(instrument: number): void {
+            instrument = instrument >> 0;
             instrument -= 1;
             if (instrument < 0 || instrument > 0x7f) return;
 
@@ -206,6 +210,7 @@ namespace midi {
         //% blockGap=8 weight=79
         //% subcategory="Channels"
         setVelocity(velocity: number): void {
+            velocity = velocity >> 0;
             this.velocity = velocity & 0x7f;
         }
 
@@ -217,6 +222,7 @@ namespace midi {
         //% amount.min=0 amount.max=16383  weight=78
         //% subcategory="Channels"
         pitchBend(amount: number) {
+            amount = amount >> 0;
             amount = Math.max(0, amount & 0x3fff);
             sendMessage([0xe0 | this.channel, amount & 0x7f, (amount >> 7) & 0x7f]);
         }
@@ -225,10 +231,11 @@ namespace midi {
          * Sends a MIDI command
          * @param cmd the command to send
          */
-        //% blockId=midi_command block="%this|command %cmd"
+        //% blockId=midi_command block="%this|command $cmd=midi_command"
         //% blockGap=8
         //% subcategory="Channels"
-        command(cmd: MidiCommand) {
+        command(cmd: number) {
+            cmd = cmd >> 0;
             sendMessage([cmd | this.channel]);
         }
 
@@ -241,6 +248,7 @@ namespace midi {
         //% subcategory="Channels"
         //% program.min=0 program.max=127
         programChange(program: number) {
+            program = program >> 0;
             sendMessage([0xc0 | this.channel, program & 0x7f]);
         }
 
@@ -254,6 +262,7 @@ namespace midi {
         //% subcategory="Channels"
         //% pressure.min=0 pressure.max=127
         aftertouch(pressure: number) {
+            pressure = pressure >> 0;
             sendMessage([0xd0 | this.channel, pressure & 0x7f]);
         }
 
@@ -268,6 +277,8 @@ namespace midi {
         //% key.min=0 key.max=127
         //% pressure.min=0 pressure.max=127
         polyphonicAftertouch(key: number, pressure: number) {
+            key = key >> 0;
+            pressure = pressure >> 0;
             sendMessage([0xa0 | this.channel, key & 0x7f, pressure & 0x7f]);
         }
 
@@ -283,6 +294,8 @@ namespace midi {
         //% fn.min=0 fn.max=119
         //% value.min=0 value.max=127
         controlChange(fn: number, value: number) {
+            fn = fn >> 0;
+            value = value >> 0;
             sendMessage([0xb0 | this.channel, fn & 0x7f, value & 0x7f]);
         }
 
@@ -383,5 +396,23 @@ namespace midi {
     //% shim=TD_ID weight=5 advanced=true
     export function drumSound(sound: DrumSound): number {
         return sound;
+    }
+
+    /**
+     * Selects an instrument
+     */
+    //% blockId=midi_instrument block="$instrument"
+    //% shim=TD_ID weight=4 advanced=true
+    export function instrument(i: MidiInstrument): number {
+        return i;
+    }
+
+    /**
+     * Selects a command
+     */
+    //% blockId=midi_command block="$command"
+    //% shim=TD_ID weight=4 advanced=true
+    export function command(c: MidiCommand): number {
+        return c;
     }
 }
