@@ -393,7 +393,7 @@ namespace midi {
      * @param drumSound the type of sound
      */
     //% blockId=midi_drum_sound block="%sound"
-    //% shim=TD_ID weight=5 advanced=true
+    //% shim=TD_ID weight=5 blockGap=8
     export function drumSound(sound: DrumSound): number {
         return sound;
     }
@@ -402,7 +402,7 @@ namespace midi {
      * Selects an instrument
      */
     //% blockId=midi_instrument block="$i"
-    //% shim=TD_ID weight=4 advanced=true
+    //% shim=TD_ID weight=4 blockGap=8
     export function instrument(i: MidiInstrument): number {
         return i;
     }
@@ -411,7 +411,7 @@ namespace midi {
      * Selects a command
      */
     //% blockId=midi_command_id block="$c"
-    //% shim=TD_ID weight=4 advanced=true
+    //% shim=TD_ID weight=3 blockGap=8
     export function command(c: MidiCommand): number {
         return c;
     }
