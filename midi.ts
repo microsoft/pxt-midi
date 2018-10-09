@@ -42,7 +42,7 @@ enum MidiChannelMode {
  * Blocks to simulate MIDI instruments.
  */
 //% weight=85 icon="\uf001" color="#5ea9dd"
-//% groups="['Play', 'Constants', 'Channels', 'Transports']"
+//% groups='["Play", "Constants", "Channels", "Transports"]'
 namespace midi {
     /**
      * Transport needs to be set prior to using MIDI APIs
@@ -77,7 +77,7 @@ namespace midi {
     * Send raw MIDI messages via serial
     */
     //% blockId=midi_raw_serial_transport block="midi use raw serial"
-    //% weight=2
+    //% weight=2 blockGap=8
     //% group=Transports
     export function useRawSerial() {
         function send(data: Buffer): void {
@@ -90,7 +90,7 @@ namespace midi {
      * Send human readable MIDI messages via serial
      */
     //% blockId=midi_serial_transport block="midi use serial"
-    //% weight=1
+    //% weight=1 blockGap=8
     //% group=Transports
     export function useSerial() {
         function send(data: Buffer): void {
