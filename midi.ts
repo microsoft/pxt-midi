@@ -274,7 +274,7 @@ namespace midi {
          * @param key the note to play
          * @param pressure the pressure
          */
-        //% blockId=midi_polyphonic_after_touch block="%this|polyphonic after touch %key %pressure"
+        //% blockId=midi_polyphonic_after_touch block="%this|polyphonic after touch %key|%pressure"
         //% blockGap=8
         //% group="Channels"
         //% key.min=0 key.max=127
@@ -291,7 +291,7 @@ namespace midi {
          * @param controller the controller number
          * @param value the value
          */
-        //% blockId=midi_control_change block="%this|control change %key to %pressure"
+        //% blockId=midi_control_change block="%this|control change %key|to %pressure"
         //% blockGap=8
         //% group="Channels"
         //% fn.min=0 fn.max=119
