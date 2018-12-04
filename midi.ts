@@ -87,24 +87,14 @@ namespace midi {
     }
 
     /**
-     * Send human readable MIDI messages via serial
+     * Send human readable MIDI messages via console
      */
-    //% blockId=midi_serial_transport block="midi use serial"
+    //% blockId=midi_serial_transport block="midi use console"
     //% weight=1 blockGap=8
     //% group=Transports
-    export function useSerial() {
+    export function useConsole() {
         function send(data: Buffer): void {
-            // waiting for beta
-            //const buf = pins.createBuffer(data.length);
-            //for (let i = 0; i < data.length; ++i)
-            //    buf[i] = data[i];
-            // serial.writeBuffer(buf);
-            serial.writeString("midi:")
-            for (let i = 0; i < data.length; ++i) {
-                if (i > 0) serial.writeString(",");
-                serial.writeNumber(data[i]);
-            }
-            serial.writeLine("");
+            console.log(`midi: ${data.toHex()}`)
         }
         setTransport(send)
     }
