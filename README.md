@@ -95,6 +95,14 @@ let piano = midi.channel(1);
 piano.pitchBend(8192 + input.acceleration(Dimension.X) * 8)
 ```
 
+## Logging packets
+
+Add the **midi use console** block will print all MIDI packets to the console.
+
+```block
+midi.useConsole() 
+```
+
 ## Radio serial
 
 You can use radio to send MIDI messages from various @boardname@ and play them via  [Hairless MIDI](http://projectgus.github.io/hairless-midiserial/).
