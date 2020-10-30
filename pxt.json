@@ -10,14 +10,14 @@
         "README.md",
         "midi.ts",
         "instruments.ts",
-        "drums.ts",
-        "extension.cpp",
-        "shims.d.ts",
-        "enums.d.ts"
+        "drums.ts"
     ],
     "testFiles": [
         "tests.ts"
     ],
     "public": true,
-    "installedVersion": "workspace:dc56e056-80d3-4bfe-1166-c3991c759375"
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj"
 }
